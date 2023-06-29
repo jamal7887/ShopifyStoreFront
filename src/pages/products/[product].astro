@@ -1,0 +1,26 @@
+---
+import products from "../../data/fetch.js";
+import Layout from "../../layouts/Layout.astro";
+import Page from "../../components/productpage.svelte";
+export function getStaticPaths() {
+    return products.map(({ node }) => {
+        return {
+            params: {
+                product: node.title,
+            },
+            props: {
+                data: node,
+            },
+        };
+    });
+}
+
+const { product } = Astro.params;
+const { data } = Astro.props;
+---
+
+<Layout title={product}>
+    <main>
+        <Page data={data} client:load />
+    </main>
+</Layout>
