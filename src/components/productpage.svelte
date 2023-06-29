@@ -4,25 +4,59 @@
 
   import { fetchthings } from "../data/fetch";
   let variantId = data.variants.edges[0].node.id;
+  console.log(variantId);
 
-  let checkoutmutation = `
-mutation {
-    checkoutCreate(input: {lineItems: [{variantId: "${variantId}", quantity: 1}]}) {
-      checkout {
-        webUrl
+  let productArray = [];
+
+  onMount(() => {
+    productArray = JSON.parse(sessionStorage.getItem("items")) || [];
+  });
+
+  console.log(variantId);
+
+  const checkout = async () => {
+    loadingcheckout = true;
+    let products = productArray
+      .map(item => `{variantId:"${item.variantId}", quantity: ${item.quantity}}`)
+      .join(", ");
+    let checkoutMutation = `
+      mutation {
+        checkoutCreate(input: {lineItems: [${products}]}) {
+          checkout {
+            webUrl
+          }
+        }
       }
+    `;
+    console.log(checkoutMutation);
+    let checkoutResponse = await fetchthings(checkoutMutation);
+    let url = checkoutResponse.data.checkoutCreate.checkout.webUrl;
 
-    }
-}
-`;
-
-  let checkout = async () => {
-    loading = true;
-    let checkout = await fetchthings(checkoutmutation);
-    let url = checkout.data.checkoutCreate.checkout.webUrl;
     window.location.replace(url);
   };
-  let loading = false;
+
+  const addtocart = async () => {
+    loadingCart = true;
+    if (productArray.length === 0) {
+      productArray.push({ variantId, quantity: 1 });
+    } else {
+      const existingItem = productArray.find(item => item.variantId === variantId);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        productArray.push({ variantId, quantity: 1 });
+      }
+    }
+    sessionStorage.setItem("items", JSON.stringify(productArray));
+    setTimeout(() => {
+      loadingCart = false;
+    }, 300);
+  };
+
+  let loadingcheckout = false;
+  let loadingCart = false;
+
+  console.log(productArray);
 </script>
 
 <div
@@ -49,14 +83,26 @@ mutation {
     <p class="text-xl font-semibold">
       ${data.priceRange.minVariantPrice.amount}
     </p>
+    <div>
     <button
       class="px-6 py-2 bg-blue-600 text-white w-full md:w-fit font-bold hover:bg-blue-500 rounded-md"
-      on:click={checkout}
+      on:click={addtocart}
     >
-    {#if loading}
+    {#if loadingCart}
     <i class="fa-solid fa-spinner animate-spin"></i>
     {/if}
-      Buy
+      add to cart
+      
     </button>
+    <button
+      class="px-6 py-2 bg-red-600 text-white w-full md:w-fit font-bold hover:bg-red-500 rounded-md mt-2"
+      on:click={checkout}
+    >
+    {#if loadingcheckout}
+    <i class="fa-solid fa-spinner animate-spin"></i>
+    {/if}
+    checkout
+    </button>
+  </div>
   </div>
 </div>
