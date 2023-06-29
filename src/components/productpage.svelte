@@ -4,7 +4,6 @@
 
   import { fetchthings } from "../data/fetch";
   let variantId = data.variants.edges[0].node.id;
-  console.log(variantId);
 
   let checkoutmutation = `
 mutation {
@@ -18,11 +17,12 @@ mutation {
 `;
 
   let checkout = async () => {
+    loading = true;
     let checkout = await fetchthings(checkoutmutation);
     let url = checkout.data.checkoutCreate.checkout.webUrl;
-    console.log(url);
     window.location.replace(url);
   };
+  let loading = false;
 </script>
 
 <div
@@ -53,6 +53,9 @@ mutation {
       class="px-6 py-2 bg-blue-600 text-white w-full md:w-fit font-bold hover:bg-blue-500 rounded-md"
       on:click={checkout}
     >
+    {#if loading}
+    <i class="fa-solid fa-spinner animate-spin"></i>
+    {/if}
       Buy
     </button>
   </div>
