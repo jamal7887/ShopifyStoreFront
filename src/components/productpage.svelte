@@ -81,7 +81,7 @@
           <label
             for="custom-input-number"
             class="w-full text-gray-700 text-sm font-semibold"
-            >Counter Input
+            >Quantity
           </label>
           <div class="h-fit">
             <div
