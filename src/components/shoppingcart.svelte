@@ -7,7 +7,6 @@
     onMount(() => {
         cartItems = JSON.parse(sessionStorage.getItem("items")) || [];
     });
-    console.log(cartopen);
     let loading = false;
     const checkoutClick = () => {
         loading = true;
@@ -17,12 +16,12 @@
 </script>
 
 
-<div id="cartModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 font-['Bebas Neue'] overflow-y-scroll ">
-        <div class="absolute bg-white right-0 top-0 w-8/12 sm:w-5/12 md:2/12 px-5 min-h-full max-h-fit flex flex-col justify-between">
+<div class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 font-['Bebas Neue'] overflow-y-scroll ">
+        <div class="absolute bg-white right-0 top-0 w-9/12 sm:w-9/12 md:w-5/12 px-5 min-h-full max-h-fit flex flex-col justify-between">
             <div>
             <div class="w-full flex justify-between border-b border-gray-400 pb-2 mb-2">
             
-            <h1 class="text-3xl font-bold   md:text-5xl">
+            <h1 class="text-3xl font-bold md:text-5xl">
                 Your cart
             </h1>
             
@@ -38,9 +37,9 @@
             </p>
             {#each cartItems as item}
             <div class="flex space-x-3 py-5">
-                <img src={item.image} alt="" class="w-36 rounded-md">
+                <img src={item.image} alt="" class="w-24 rounded-md md:w-36">
                 <div class="space-y-1">
-                    <h1 class="text-3xl font-bold">
+                    <h1 class="text-2xl font-bold md:text-3xl">
                         {item.name}
                     </h1>
                     <p class="text-gray-500 text-lg">

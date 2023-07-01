@@ -18,21 +18,29 @@ const checkout = async (ProductList) => {
   window.location.replace(url);
 };
 
-const addtocart = async (productList, variantId, name, price, image) => {
-  additem(productList, variantId, name, price, image);
+const addtocart = async (
+  productList,
+  variantId,
+  name,
+  price,
+  image,
+  quantity
+) => {
+  additem(productList, variantId, name, price, image, quantity);
   sessionStorage.setItem("items", JSON.stringify(productList));
   console.log(productList);
 };
 
-function additem(array, variantId, name, price, image) {
+function additem(array, variantId, name, price, image, quantity) {
   if (array.length === 0) {
-    array.push({ variantId, quantity: 1, name, price, image });
+    array.push({ variantId, quantity, name, price, image });
   } else {
     const existingItem = array.find((item) => item.variantId === variantId);
     if (existingItem) {
-      existingItem.quantity += 1;
+      let total = parseInt(existingItem.quantity) + parseInt(quantity);
+      existingItem.quantity = total;
     } else {
-      array.push({ variantId, quantity: 1, name, price, image });
+      array.push({ variantId, quantity: quantity, name, price, image });
     }
   }
 }
